@@ -58,10 +58,9 @@ jobs:
           if [[ "${{ needs.test.result }}" == "failure" ]]; then
             if  [[ -z "$existing_issue" ]]; then
               echo "New failure detected. Creating issue..."
-              echo "$body" > "$body_file"
               new_issue=$(gh issue create \
                 --title "$title" \
-                --body-file "$body_file")
+                --body "$body")
               echo "Created issue: $new_issue"
             else
               echo "Open issue already exists: https://github.com/${{ github.repository }}/issues/$existing_issue"
@@ -86,5 +85,4 @@ jobs:
             An installation check has failed: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             This issue will be automatically closed upon the next successful run of the workflow.
-          body_file: body.txt
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_NEXTSTRAIN_BOT_REPO }}
