@@ -55,8 +55,8 @@ jobs:
             --json 'number,title' \
             --jq '.[] | select(.title == "${{ env.title }}") | .number')
 
-          if [ "${{ needs.test.result }}" = "failure" ]; then
-            if  [ -z "$existing_issue" ]; then
+          if [[ "${{ needs.test.result }}" == "failure" ]]; then
+            if  [[ -z "$existing_issue" ]]; then
               echo "New failure detected. Creating issue..."
               echo "$body" > "$body_file"
               new_issue=$(gh issue create \
@@ -68,8 +68,8 @@ jobs:
             fi
           fi
 
-          if [ "${{ needs.test.result }}" = "success" ]; then
-            if [ -n "$existing_issue" ]; then
+          if [[ "${{ needs.test.result }}" == "success" ]]; then
+            if [[ -n "$existing_issue" ]]; then
               echo "Closing issue https://github.com/${{ github.repository }}/issues/$existing_issue"
               gh issue close "$existing_issue" \
                 --comment "Installation is successful as of https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
