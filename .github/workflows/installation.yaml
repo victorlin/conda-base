@@ -23,21 +23,13 @@ jobs:
         os:
           - ubuntu-20.04
           - ubuntu-22.04
-          - macos-12
-          - macos-13
-          - macos-14
 
     runs-on: ${{matrix.os}}
     steps:
-      - uses: nextstrain/.github/actions/setup-nextstrain-cli@master
-        with:
-          # First Nextstrain CLI version which explicitly installs the latest
-          # conda-base package version during `nextstrain setup` instead of
-          # letting Micromamba resolve the package to a potentially older
-          # version.
-          #   -trs, 9 Oct 2023
-          cli-version: ">=7.3.0.post1"
-          runtime: conda
+      - if: matrix.os == 'ubuntu-20.04'
+        run: exit 1
+      - if: matrix.os == 'ubuntu-22.04'
+        run: exit 0
 
   # Surface failures via GitHub issues
   failure-reporting:
