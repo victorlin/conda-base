@@ -49,11 +49,25 @@ jobs:
 
       - name: Create or close issue
         run: |
-          existing_issue=$(gh issue list \
+          # Search for issues opened by this job.
+          matching_issues=$(gh issue list \
             --state open \
             --author '@me' \
             --json 'number,title' \
-            --jq '.[] | select(.title == "${{ env.title }}") | .number')
+            --jq 'map(select(.title == "${{ env.title }}") | .number)')
+
+          # Handle the case of multiple matching issues, even though this
+          # shouldn't happen under normal circumstances.
+          if [[ $(jq length <<<"$matching_issues") -gt 1 ]]; then
+            echo "ERROR: Multiple matching issues found:" >&2
+            for issue in $(jq -r '.[]' <<<"$matching_issues"); do
+                echo "- https://github.com/${{ github.repository }}/issues/$issue" >&2
+            done
+            echo "This must be handled manually." >&2
+            exit 1
+          fi
+
+          existing_issue=$(jq -r '.[0] | values' <<<"$matching_issues")
 
           if [[ "${{ needs.test.result }}" == "failure" ]]; then
             if  [[ -z "$existing_issue" ]]; then
