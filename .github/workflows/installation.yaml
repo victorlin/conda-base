@@ -91,4 +91,4 @@ jobs:
             An installation check has failed: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             This issue will be automatically closed upon the next successful run of the workflow.
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_NEXTSTRAIN_BOT_REPO }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_TEST }}
