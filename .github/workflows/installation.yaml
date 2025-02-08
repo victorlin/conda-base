@@ -39,4 +39,5 @@ jobs:
       failure: ${{ needs.test.result == 'failure' }}
       success: ${{ needs.test.result == 'success' }}
       title: Installation failure
-    secrets: inherit
+    secrets:
+      token: ${{ secrets.GH_TOKEN_NEXTSTRAIN_BOT_REPO }}
